@@ -188,14 +188,44 @@
     position: fixed; z-index: 40; pointer-events:none; opacity:0; transform: translateY(4px);
     transition: opacity .12s ease, transform .12s ease;
     background: var(--panel-2); border:1px solid var(--line); border-radius: 10px;
-    padding: 10px 12px; box-shadow: 0 18px 40px -14px rgba(0,0,0,.6); max-width: 240px;
+    padding: 10px 12px; box-shadow: 0 18px 40px -14px rgba(0,0,0,.6); max-width: 288px;
   }
+  #tip .t-spec { margin-top: 9px; padding-top: 9px; border-top: 1px solid var(--line); }
+  #tip .t-brand { font-size: 11.5px; font-weight: 700; color: var(--ink); }
+  #tip .t-brand span { color: var(--ink-3); font-weight: 600; }
+  #tip .t-grid { display:grid; grid-template-columns: auto 1fr; gap: 3px 10px; margin-top: 6px; }
+  #tip .t-grid span { font-size: 10px; text-transform: uppercase; letter-spacing:.08em; color: var(--ink-3); align-self:center; }
+  #tip .t-grid b { font-size: 11.5px; font-weight: 650; color: var(--ink-2); text-align: right; font-variant-numeric: tabular-nums; }
   #tip.on { opacity:1; transform: translateY(0); }
   #tip .t-name { font-weight:800; font-size: 13.5px; display:flex; align-items:center; gap:7px; }
   #tip .t-name .d { width:10px;height:10px;border-radius:50%;background:var(--k); flex:none; }
   #tip .t-type { font-size:11px; text-transform:uppercase; letter-spacing:.12em; color: var(--ink-3); margin-top:3px; }
   #tip .t-read { font-size:12px; color: var(--ink-2); margin-top:7px; line-height:1.4; }
   #tip .t-new { display:inline-block; margin-top:8px; font-size:9px; letter-spacing:.14em; font-weight:800; background:var(--accent); color:var(--accent-ink); padding:2px 6px; border-radius:5px; }
+
+  /* ---------- New for 2026 ---------- */
+  .new-h { display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin: 40px 0 14px; }
+  .new-h h2 { font-size: 15px; text-transform: uppercase; letter-spacing:.18em; margin:0; font-weight:800; }
+  .new-h h2::before { content:"◆"; color: var(--accent); margin-right: 9px; font-size: 11px; vertical-align: 2px; }
+  .new-h .hint { font-size:12px; color: var(--ink-3); }
+  .newballs { display:grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 14px; }
+  .nb {
+    position:relative; background: var(--panel); border:1px solid var(--line); border-radius: 16px;
+    padding: 18px 18px 16px; box-shadow: var(--shadow); overflow:hidden;
+  }
+  .nb::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background: var(--k); }
+  .nb-top { display:flex; align-items:center; gap:11px; }
+  .nb-pt { width:20px; height:20px; border-radius:50%; background:var(--k); flex:none; box-shadow:0 0 0 4px color-mix(in srgb,var(--k) 22%, transparent); }
+  .nb-name { font-size:19px; font-weight:800; letter-spacing:-.01em; line-height:1.05; }
+  .nb-sub { font-size:11.5px; color: var(--ink-3); margin-top:2px; }
+  .nb-badge { margin-left:auto; font-size:9px; letter-spacing:.14em; font-weight:800; background:var(--accent); color:var(--accent-ink); padding:3px 7px; border-radius:6px; align-self:flex-start; }
+  .nb-shape { font-size:13px; color: var(--ink-2); margin:13px 0 0; line-height:1.5; }
+  .nb-grid { display:grid; grid-template-columns: repeat(2, 1fr); gap:1px; margin-top:14px; background: var(--line); border:1px solid var(--line); border-radius:10px; overflow:hidden; }
+  .nb-cell { background: var(--panel-2); padding: 8px 11px; }
+  .nb-cell.wide { grid-column: 1 / -1; }
+  .nb-cell .k { font-size:9.5px; text-transform:uppercase; letter-spacing:.12em; color: var(--ink-3); }
+  .nb-cell .v { font-size:12.5px; font-weight:650; color: var(--ink); margin-top:2px; font-variant-numeric: tabular-nums; }
+  .nb-note { font-size:12px; color: var(--ink-2); margin:13px 0 0; padding-left:12px; border-left:2px solid var(--accent); line-height:1.45; }
 
   /* ---------- Roster ---------- */
   .roster-h { display:flex; align-items:baseline; justify-content:space-between; margin: 40px 0 14px; gap: 12px; }
@@ -261,6 +291,12 @@
     </div>
   </div>
 
+  <section class="new-h">
+    <h2>New for 2026</h2>
+    <span class="hint">Researched specs · added to the map</span>
+  </section>
+  <div class="newballs" id="newballs"></div>
+
   <div class="roster-h">
     <h2>The Roster</h2>
     <span class="hint">Tap a core type above to isolate it</span>
@@ -296,11 +332,23 @@
     { n:"Monsoon",         t:"symStrong",  x:47, y:23 },
     { n:"Transformer",     t:"asymStrong", x:30, y:25 },
     { n:"Rockstar",        t:"symStrong",  x:45, y:35 },
-    { n:"Vengeance Returns",t:"symStrong", x:47, y:42, new:true },
+    { n:"Vengeance Returns",t:"symStrong", x:47, y:42, new:true, spec:{
+        brand:"900 Global", line:"800 Series · High Performance",
+        cover:"RB91 Nano Hybrid — Power Edge finish", core:"Blast A.I. · symmetric",
+        rg:"2.47", diff:".055", psa:"— (sym)", oil:"Medium to medium-heavy", flare:"Medium-high",
+        shape:"Strong mid-lane read with added length and a controlled, powerful backend.",
+        note:"Highest differential in the entire 900 Global line — the continuation of your Vengeance.",
+        released:"Jun 2026" } },
     { n:"Phaze II Pearl",  t:"symStrong",  x:67, y:36 },
     { n:"Gremlin Tour X",  t:"symStrong",  x:19, y:40 },
     { n:"Ion Pro",         t:"asymWeak",   x:71, y:40 },
-    { n:"Transform",       t:"asymStrong", x:22, y:46, new:true },
+    { n:"Transform",       t:"asymStrong", x:22, y:46, new:true, spec:{
+        brand:"Roto Grip", full:"Transform Pearl", line:"HP5",
+        cover:"MicroTrax Pearl Reactive — 100% nano-loaded", core:"Morph-Wing · asymmetric",
+        rg:"2.51", diff:".051", psa:".015", oil:"Medium to heavy", flare:"—",
+        shape:"Clean through the fronts, holds its line in oil, then a crisp, angular backend.",
+        note:"Pearl sibling of your Transformer — the drill-tunable wing lets your pro shop reshape it.",
+        released:"Jul 2026" } },
     { n:"Origin",          t:"asymStrong", x:27, y:50 },
     { n:"DNA Coil",        t:"asymWeak",   x:50, y:48 },
     { n:"Ion Max Pearl",   t:"asymStrong", x:33, y:57 },
@@ -343,11 +391,23 @@
   // ---- Tooltip ----
   function showTip(ev, b){
     tip.style.setProperty("--k", TYPES[b.t].color);
-    tip.innerHTML =
+    let html =
       `<div class="t-name"><span class="d"></span>${b.n}</div>` +
       `<div class="t-type">${TYPES[b.t].label}</div>` +
-      `<div class="t-read">${readLine(b)}</div>` +
-      (b.new ? `<span class="t-new">NEW · 2026</span>` : "");
+      `<div class="t-read">${readLine(b)}</div>`;
+    if (b.spec){
+      const s = b.spec;
+      html += `<div class="t-spec">` +
+        `<div class="t-brand">${s.brand}${s.full && s.full!==b.n ? " · "+s.full : ""} <span>· ${s.line}</span></div>` +
+        `<div class="t-grid">` +
+          `<span>Cover</span><b>${s.cover}</b>` +
+          `<span>Core</span><b>${s.core}</b>` +
+          `<span>RG / Diff / PSA</span><b>${s.rg} / ${s.diff} / ${s.psa}</b>` +
+          `<span>Oil</span><b>${s.oil}</b>` +
+        `</div></div>`;
+    }
+    if (b.new) html += `<span class="t-new">NEW · ${b.spec?b.spec.released:"2026"}</span>`;
+    tip.innerHTML = html;
     tip.classList.add("on");
     tip.setAttribute("aria-hidden","false");
     const px = (ev.clientX ?? (ev.target.getBoundingClientRect().left)) + 16;
@@ -370,6 +430,35 @@
       roster.appendChild(c);
       return { c, b };
     });
+
+  // ---- New for 2026 detail cards ----
+  const newballs = document.getElementById("newballs");
+  BALLS.filter(b => b.new && b.spec).forEach(b => {
+    const s = b.spec;
+    const card = document.createElement("article");
+    card.className = "nb";
+    card.style.setProperty("--k", TYPES[b.t].color);
+    card.innerHTML =
+      `<div class="nb-top">
+         <span class="nb-pt"></span>
+         <div>
+           <div class="nb-name">${b.n}</div>
+           <div class="nb-sub">${s.brand}${s.full && s.full!==b.n ? " " + s.full : ""} · ${s.line} · ${TYPES[b.t].label}</div>
+         </div>
+         <span class="nb-badge">NEW</span>
+       </div>
+       <p class="nb-shape">${s.shape}</p>
+       <div class="nb-grid">
+         <div class="nb-cell wide"><div class="k">Coverstock</div><div class="v">${s.cover}</div></div>
+         <div class="nb-cell wide"><div class="k">Core</div><div class="v">${s.core}</div></div>
+         <div class="nb-cell"><div class="k">RG</div><div class="v">${s.rg}</div></div>
+         <div class="nb-cell"><div class="k">Differential</div><div class="v">${s.diff}</div></div>
+         <div class="nb-cell"><div class="k">Int. Diff (PSA)</div><div class="v">${s.psa}</div></div>
+         <div class="nb-cell"><div class="k">Oil / Released</div><div class="v">${s.oil} · ${s.released}</div></div>
+       </div>
+       <p class="nb-note">${s.note}</p>`;
+    newballs.appendChild(card);
+  });
 
   // ---- Legend / filter ----
   const counts = {};
