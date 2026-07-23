@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Homepage embeds — Mental Mistakes lead magnet (placement demo)</title>
+<meta name="robots" content="noindex">
+<style>
+  /* ============================================================
+     PLACEMENT DEMO — not a page to publish as-is.
+     This file shows WHERE the three homepage snippets go on
+     beyondthelanes.com. Striped grey areas = your existing site
+     (untouched). The colored blocks are the three snippets.
+     Copy each snippet from between its SNIPPET START / END comments
+     in the page source and paste it into your homepage.
+     ============================================================ */
+  body{margin:0;font-family:"Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;background:#e9ebee;color:#18222e;}
+  .demo-label{background:#18222e;color:#f2e4cb;font-size:12px;letter-spacing:.06em;padding:8px 16px;text-align:center;font-weight:700;text-transform:uppercase;}
+  .demo-label span{color:#c8862a;}
+  .existing{
+    background:repeating-linear-gradient(45deg,#dfe3e8,#dfe3e8 14px,#d6dae0 14px,#d6dae0 28px);
+    color:#8a94a0;text-align:center;padding:64px 20px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:13px;
+    border-top:1px dashed #b9c0c9;border-bottom:1px dashed #b9c0c9;
+  }
+  .existing.hero{padding:120px 20px;background:repeating-linear-gradient(45deg,#d3d8de,#d3d8de 14px,#cbd1d8 14px,#cbd1d8 28px);color:#6f7883;font-size:15px;}
+  .marker{background:#c8862a;color:#2b1c05;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;text-align:center;padding:6px 16px;}
+</style>
+</head>
+<body>
+
+<div class="demo-label">Placement demo &mdash; <span>Mental Mistakes</span> homepage embeds &middot; striped = your existing site (untouched)</div>
+
+<!-- ================================================================
+     SNIPPET 1 START — SITE-WIDE ANNOUNCEMENT BAR
+     Paste this directly ABOVE your site header / nav (site-wide).
+     Links to the opt-in page at /mental-mistakes.
+     ================================================================ -->
+<style>
+  .btl-mm-bar{background:linear-gradient(90deg,#12514e 0%,#0d403d 55%,#12514e 100%);color:#f6efe1;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;text-align:center;}
+  .btl-mm-bar a{display:block;padding:11px 18px;color:#f6efe1;text-decoration:none;font-size:14px;font-weight:600;letter-spacing:.01em;}
+  .btl-mm-bar a b{color:#f2e4cb;}
+  .btl-mm-bar a .go{color:#f2e4cb;font-weight:800;white-space:nowrap;}
+  .btl-mm-bar a:hover .go{text-decoration:underline;}
+  @media (max-width:520px){ .btl-mm-bar a{font-size:13px;padding:10px 14px;} }
+</style>
+<div class="btl-mm-bar">
+  <a href="/mental-mistakes">
+    <b>Free guide for bowling parents:</b> All the Mental Mistakes I&rsquo;ve Made (So You Don&rsquo;t Have To) &nbsp;<span class="go">Get it free &rarr;</span>
+  </a>
+</div>
+<!-- SNIPPET 1 END -->
+
+<div class="existing">Your existing site header / navigation</div>
+<div class="existing hero">Your existing homepage hero</div>
+
+<div class="marker">&darr; Snippet 2 goes directly below the hero &darr;</div>
+
+<!-- ================================================================
+     SNIPPET 2 START — GUIDE SECTION (book mockup + inline form)
+     Paste this directly BELOW your homepage hero section.
+     Contains one GHL form slot (marked DEVELOPER).
+     ================================================================ -->
+<style>
+  .btl-mm-guide{background:#f7f3ec;color:#18222e;font-family:Georgia,"Times New Roman",serif;
+    background-image:radial-gradient(120% 130% at 90% 0%,rgba(200,134,42,.10),transparent 55%);}
+  .btl-mm-guide .in{max-width:1040px;margin:0 auto;padding:clamp(40px,5vw,64px) clamp(20px,4vw,44px);
+    display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(28px,4vw,52px);align-items:center;}
+  .btl-mm-guide .eyebrow{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#c8862a;margin:0 0 14px;}
+  .btl-mm-guide h2{font-size:clamp(26px,3.4vw,38px);line-height:1.08;letter-spacing:-.02em;margin:0 0 14px;font-weight:400;}
+  .btl-mm-guide h2 em{font-style:italic;color:#12514e;}
+  .btl-mm-guide p.lede{font-size:17px;color:#4d5a68;margin:0 0 22px;max-width:40ch;}
+  .btl-mm-book{position:relative;width:min(260px,72vw);aspect-ratio:3/4.15;margin:0 auto;color:#f6efe1;
+    border-radius:6px 12px 12px 6px;border-left:5px solid rgba(0,0,0,.28);
+    background:linear-gradient(135deg,#12514e,#0d403d);box-shadow:0 18px 50px -24px rgba(24,34,46,.5);
+    padding:28px 24px;display:flex;flex-direction:column;}
+  .btl-mm-book .k{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:#c8862a;font-weight:700;margin-bottom:auto;}
+  .btl-mm-book .t{font-size:clamp(19px,2.4vw,24px);line-height:1.12;margin:0 0 10px;}
+  .btl-mm-book .t small{display:block;font-size:.62em;font-style:italic;color:#e8dcc4;margin-top:7px;}
+  .btl-mm-book .r{width:40px;height:2px;background:#c8862a;margin:0 0 12px;}
+  .btl-mm-book .by{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:12px;color:#dcd2bf;}
+  .btl-mm-book .by b{display:block;color:#fff;font-size:14px;margin-bottom:2px;}
+  .btl-mm-book .badge{position:absolute;bottom:-13px;right:-13px;background:#c8862a;color:#2b1c05;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-weight:800;font-size:11px;letter-spacing:.04em;padding:8px 13px;border-radius:999px;transform:rotate(4deg);box-shadow:0 6px 20px -12px rgba(24,34,46,.5);}
+  .btl-mm-form{display:flex;gap:10px;flex-wrap:wrap;max-width:460px;}
+  .btl-mm-form input{font:inherit;font-size:16px;flex:1 1 150px;padding:13px 15px;border:1.5px solid #e4ddd0;border-radius:11px;background:#fff;color:#18222e;}
+  .btl-mm-form input:focus{outline:none;border-color:#12514e;box-shadow:0 0 0 3px rgba(18,81,78,.14);}
+  .btl-mm-form button{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-weight:800;font-size:16px;cursor:pointer;border:none;border-radius:11px;padding:14px 22px;background:#c8862a;color:#2b1c05;flex:1 1 100%;box-shadow:0 6px 20px -12px rgba(24,34,46,.35);}
+  .btl-mm-form button:hover{filter:brightness(1.05);}
+  .btl-mm-fine{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:12px;color:#8a94a0;margin:12px 0 0;}
+  @media (max-width:780px){ .btl-mm-guide .in{grid-template-columns:1fr;} .btl-mm-guide .bookcol{order:-1;} }
+</style>
+<section class="btl-mm-guide">
+  <div class="in">
+    <div class="bookcol">
+      <div class="btl-mm-book" role="img" aria-label="Book cover: All the Mental Mistakes I've Made (So You Don't Have To) by Diandra Asbaty">
+        <div class="k">The free guide</div>
+        <div class="t">All the Mental Mistakes I&rsquo;ve Made<small>(So You Don&rsquo;t Have To)</small></div>
+        <div class="r"></div>
+        <div class="by"><b>Diandra Asbaty</b>World Champion Bowler</div>
+        <div class="badge">FREE PDF</div>
+      </div>
+    </div>
+    <div>
+      <p class="eyebrow">Free guide for bowling parents</p>
+      <h2>Ten mistakes I made &mdash; <em>so you don&rsquo;t have to.</em></h2>
+      <p class="lede">The mental game advice nobody hands the parent in the stands. Read it for yourself first &mdash; it lands in your inbox in about a minute.</p>
+
+      <!-- DEVELOPER: Replace this placeholder form with the GHL form embed
+           (First Name + Email). Tag on submit: mental-mistakes-lead.
+           Set the GHL form's redirect to: /mental-mistakes/thank-you -->
+      <form class="btl-mm-form" action="/mental-mistakes/thank-you" method="get" novalidate>
+        <input type="text" name="first_name" autocomplete="given-name" placeholder="First name" aria-label="First name" required>
+        <input type="email" name="email" autocomplete="email" placeholder="Email address" aria-label="Email address" required>
+        <button type="submit">Send me the free guide &rarr;</button>
+      </form>
+      <p class="btl-mm-fine">Free &middot; your email stays with me &middot; unsubscribe anytime.</p>
+    </div>
+  </div>
+</section>
+<!-- SNIPPET 2 END -->
+
+<div class="existing">Your existing homepage content (offers, testimonials, media, etc.)</div>
+
+<div class="marker">&darr; Snippet 3 replaces your current newsletter signup in the footer &darr;</div>
+
+<!-- ================================================================
+     SNIPPET 3 START — FOOTER EMAIL BLOCK
+     Paste this in place of your current footer newsletter signup.
+     Contains one GHL form slot (marked DEVELOPER).
+     ================================================================ -->
+<style>
+  .btl-mm-foot{background:#12514e;color:#f6efe1;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;}
+  .btl-mm-foot .in{max-width:900px;margin:0 auto;padding:clamp(36px,4vw,52px) clamp(20px,4vw,44px);text-align:center;}
+  .btl-mm-foot .eyebrow{font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#f2e4cb;margin:0 0 12px;}
+  .btl-mm-foot h2{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:clamp(23px,3vw,30px);line-height:1.14;margin:0 auto 8px;max-width:24ch;color:#fff;}
+  .btl-mm-foot p{color:#cfe0dd;font-size:15px;margin:0 auto 22px;max-width:46ch;}
+  .btl-mm-foot form{display:flex;gap:10px;flex-wrap:wrap;max-width:480px;margin:0 auto;}
+  .btl-mm-foot input{font:inherit;font-size:16px;flex:1 1 160px;padding:13px 15px;border:1.5px solid rgba(255,255,255,.25);border-radius:11px;background:rgba(255,255,255,.96);color:#18222e;}
+  .btl-mm-foot input:focus{outline:none;border-color:#c8862a;box-shadow:0 0 0 3px rgba(200,134,42,.3);}
+  .btl-mm-foot button{font-weight:800;font-size:16px;cursor:pointer;border:none;border-radius:11px;padding:14px 22px;background:#c8862a;color:#2b1c05;flex:1 1 100%;}
+  .btl-mm-foot button:hover{filter:brightness(1.05);}
+  .btl-mm-foot .fine{font-size:12px;color:#a9c4c0;margin:12px 0 0;}
+</style>
+<section class="btl-mm-foot">
+  <div class="in">
+    <p class="eyebrow">Before you go</p>
+    <h2>Get the free guide every bowling parent should have.</h2>
+    <p>All the Mental Mistakes I&rsquo;ve Made (So You Don&rsquo;t Have To) &mdash; ten minutes, no cost, straight to your inbox.</p>
+
+    <!-- DEVELOPER: Replace this placeholder form with the GHL form embed
+         (First Name + Email). Tag on submit: mental-mistakes-lead.
+         Set the GHL form's redirect to: /mental-mistakes/thank-you -->
+    <form action="/mental-mistakes/thank-you" method="get" novalidate>
+      <input type="text" name="first_name" autocomplete="given-name" placeholder="First name" aria-label="First name" required>
+      <input type="email" name="email" autocomplete="email" placeholder="Email address" aria-label="Email address" required>
+      <button type="submit">Send me the free guide &rarr;</button>
+    </form>
+    <p class="fine">Free &middot; unsubscribe anytime.</p>
+  </div>
+</section>
+<!-- SNIPPET 3 END -->
+
+<div class="existing">Rest of your existing footer (links, social, copyright)</div>
+
+</body>
+</html>

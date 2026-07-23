@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your guide is on its way — Beyond the Lanes · Diandra Asbaty</title>
+<meta name="description" content="Your free Mental Mistakes guide is on its way. While you wait, two ways to go deeper.">
+<meta name="robots" content="noindex">
+<style>
+  /* ============================================================
+     Beyond the Lanes — "Mental Mistakes" thank-you page
+     Redirect target for the opt-in form. Two offers below:
+       1. Junior Gold Debrief ($24.97)  -> #GHL_CHECKOUT_URL
+       2. Mindset Reset free-first-month -> #GHL_MINDSET_RESET_TRIAL_URL
+     Developer: replace the two href placeholders (marked DEVELOPER).
+     ============================================================ */
+  :root{
+    --paper:#f7f3ec;--paper-2:#fffdf9;--ink:#18222e;--ink-2:#4d5a68;--ink-3:#8a94a0;
+    --line:#e4ddd0;--teal:#12514e;--teal-2:#0d403d;--gold:#c8862a;--gold-soft:#f2e4cb;
+    --shadow:0 18px 50px -24px rgba(24,34,46,.45);--shadow-sm:0 6px 20px -12px rgba(24,34,46,.35);
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:Georgia,"Times New Roman",serif;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  .sans{font-family:"Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;}
+  .wrap{max-width:1000px;margin:0 auto;padding:clamp(20px,4vw,44px);}
+  a{color:var(--teal);}
+
+  .topbar{border-bottom:1px solid var(--line);background:var(--paper-2);}
+  .topbar .wrap{display:flex;align-items:center;justify-content:space-between;padding-top:16px;padding-bottom:16px;gap:16px;}
+  .logo{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-weight:800;letter-spacing:-.01em;font-size:18px;color:var(--ink);text-decoration:none;}
+  .logo span{color:var(--teal);}
+  .cred{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);}
+
+  /* ---- confirmation ---- */
+  .confirm{text-align:center;
+    background:
+      radial-gradient(120% 130% at 88% -10%, rgba(200,134,42,.10) 0%, transparent 55%),
+      radial-gradient(120% 130% at 5% 110%, rgba(18,81,78,.08) 0%, transparent 55%),
+      var(--paper);
+  }
+  .confirm .wrap{padding-top:clamp(40px,5vw,68px);padding-bottom:clamp(32px,4vw,52px);}
+  .check{width:66px;height:66px;border-radius:50%;background:var(--teal);color:#f6efe1;display:flex;align-items:center;justify-content:center;margin:0 auto 22px;box-shadow:var(--shadow-sm);}
+  .check svg{width:32px;height:32px;}
+  .eyebrow{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin:0 0 14px;}
+  h1{font-size:clamp(30px,4.6vw,46px);line-height:1.06;letter-spacing:-.02em;margin:0 auto 16px;max-width:20ch;font-weight:400;}
+  h1 em{font-style:italic;color:var(--teal);}
+  .confirm p.lede{font-size:clamp(17px,2vw,19px);color:var(--ink-2);max-width:52ch;margin:0 auto 8px;}
+  .note{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:13px;color:var(--ink-3);margin-top:18px;}
+  .note b{color:var(--ink-2);}
+
+  /* ---- offers ---- */
+  .offers{border-top:1px solid var(--line);background:var(--paper-2);}
+  .offers .wrap{padding-top:clamp(40px,5vw,64px);padding-bottom:clamp(44px,6vw,72px);}
+  .offers-head{text-align:center;max-width:56ch;margin:0 auto 40px;}
+  .offers-head h2{font-size:clamp(24px,3.2vw,34px);line-height:1.12;letter-spacing:-.02em;margin:0 0 12px;font-weight:400;}
+  .offers-head h2 em{font-style:italic;color:var(--teal);}
+  .offers-head p{color:var(--ink-2);font-size:16px;margin:0;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:stretch;}
+  .offer{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:clamp(24px,3vw,34px);display:flex;flex-direction:column;position:relative;overflow:hidden;}
+  .offer.featured{border-color:var(--gold);}
+  .offer .flag{position:absolute;top:18px;right:-34px;transform:rotate(45deg);background:var(--gold);color:#2b1c05;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-weight:800;font-size:11px;letter-spacing:.1em;padding:5px 44px;}
+  .offer .tag{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin:0 0 14px;}
+  .offer.alt .tag{color:var(--teal);}
+  .offer h3{font-size:clamp(22px,2.6vw,27px);line-height:1.14;margin:0 0 10px;font-weight:400;}
+  .offer .price{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;margin:0 0 16px;}
+  .offer .price b{font-size:32px;font-weight:800;letter-spacing:-.02em;color:var(--ink);}
+  .offer .price s{color:var(--ink-3);font-size:16px;margin-left:8px;}
+  .offer .price span{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin-top:4px;}
+  .offer p.desc{color:var(--ink-2);font-size:15.5px;margin:0 0 18px;}
+  .offer ul{list-style:none;margin:0 0 24px;padding:0;}
+  .offer li{position:relative;padding:6px 0 6px 26px;color:var(--ink-2);font-size:15px;border-bottom:1px solid var(--line);}
+  .offer li:last-child{border-bottom:none;}
+  .offer li::before{content:"";position:absolute;left:0;top:12px;width:14px;height:8px;border-left:2px solid var(--teal);border-bottom:2px solid var(--teal);transform:rotate(-45deg);}
+  .offer .btn-wrap{margin-top:auto;}
+  .btn{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-weight:800;font-size:16px;letter-spacing:.01em;cursor:pointer;border:none;border-radius:11px;padding:15px 20px;background:var(--gold);color:#2b1c05;box-shadow:var(--shadow-sm);transition:transform .1s ease,filter .15s;text-decoration:none;text-align:center;display:block;}
+  .btn:hover{filter:brightness(1.05);}
+  .btn:active{transform:translateY(1px);}
+  .btn.teal{background:var(--teal);color:#f6efe1;}
+  .btn-sub{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:12px;color:var(--ink-3);text-align:center;margin:10px 0 0;}
+
+  .skip{text-align:center;margin-top:40px;}
+  .skip a{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:14px;color:var(--ink-3);}
+
+  footer{background:var(--ink);color:#aeb8c2;}
+  footer .wrap{display:flex;flex-wrap:wrap;gap:14px 28px;align-items:center;justify-content:space-between;padding-top:26px;padding-bottom:26px;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:13px;}
+  footer a{color:#d7dee6;text-decoration:none;}
+  footer a:hover{text-decoration:underline;}
+  footer .fl{display:flex;gap:20px;flex-wrap:wrap;}
+
+  @media (max-width:760px){ .grid2{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="wrap">
+      <a class="logo" href="https://beyondthelanes.com">Beyond the <span>Lanes</span></a>
+      <div class="cred">World Champion · Hall of Fame · 15 yrs Team USA</div>
+    </div>
+  </div>
+
+  <!-- ===== Confirmation ===== -->
+  <header class="confirm">
+    <div class="wrap">
+      <div class="check" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+      </div>
+      <p class="eyebrow">You&rsquo;re in</p>
+      <h1>Your guide is <em>on its way.</em></h1>
+      <p class="lede">Check your inbox in the next minute or two for <b>All the Mental Mistakes I&rsquo;ve Made (So You Don&rsquo;t Have To)</b>. If you only have five minutes tonight, read Mistake&nbsp;#1 &mdash; it&rsquo;s the one underneath most of the others.</p>
+      <p class="note"><b>Don&rsquo;t see it?</b> Check spam or promotions, and add me to your contacts so the rest of the series lands where you&rsquo;ll see it.</p>
+    </div>
+  </header>
+
+  <!-- ===== Two offers ===== -->
+  <section class="offers">
+    <div class="wrap">
+      <div class="offers-head">
+        <h2>While you wait &mdash; <em>two ways to go deeper.</em></h2>
+        <p>The guide is the start. These are the next two doors, one for the tournament in front of you and one for the whole season.</p>
+      </div>
+
+      <div class="grid2">
+
+        <!-- Offer 1: Junior Gold Debrief -->
+        <div class="offer featured alt">
+          <div class="flag">POPULAR</div>
+          <p class="tag">For after a big tournament</p>
+          <h3>The Junior Gold Debrief</h3>
+          <div class="price"><b>$24.97</b><span>One-time &middot; yours to keep</span></div>
+          <p class="desc">The structured debrief my whole method is built on &mdash; the conversation to have after a big tournament, so the lessons stick and the car ride heals instead of hurts.</p>
+          <ul>
+            <li>The exact debrief framework, step by step</li>
+            <li>What to ask (and what to never ask)</li>
+            <li>Turn a tough result into next month&rsquo;s gain</li>
+          </ul>
+          <div class="btn-wrap">
+            <!-- DEVELOPER: point this button at the Junior Gold Debrief $24.97 checkout -->
+            <a class="btn teal" href="#GHL_CHECKOUT_URL">Get the Junior Gold Debrief &rarr;</a>
+            <p class="btn-sub">Instant access &middot; $24.97 one-time</p>
+          </div>
+        </div>
+
+        <!-- Offer 2: Mindset Reset free-first-month trial -->
+        <div class="offer">
+          <p class="tag">For the whole season</p>
+          <h3>The Mindset Reset</h3>
+          <div class="price"><b>Free</b><s>first month</s><span>Then continue only if it&rsquo;s working</span></div>
+          <p class="desc">My monthly membership for bowling families &mdash; the tools, resets, and check-ins that keep the mental game built between tournaments, not just at them. Your first month is on me.</p>
+          <ul>
+            <li>New mindset tools every month</li>
+            <li>Resets for the whole family, not just the bowler</li>
+            <li>Cancel anytime &mdash; the first month is free</li>
+          </ul>
+          <div class="btn-wrap">
+            <!-- DEVELOPER: point this button at the Mindset Reset free-first-month trial offer in GHL -->
+            <a class="btn" href="#GHL_MINDSET_RESET_TRIAL_URL">Start my free month &rarr;</a>
+            <p class="btn-sub">No charge today &middot; cancel anytime</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="skip">
+        <a href="https://beyondthelanes.com">No thanks &mdash; take me to beyondthelanes.com &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <div class="fl">
+        <a href="https://beyondthelanes.com">beyondthelanes.com</a>
+      </div>
+      <div>&copy; Beyond the Lanes &middot; Diandra Asbaty</div>
+    </div>
+  </footer>
+
+</body>
+</html>
