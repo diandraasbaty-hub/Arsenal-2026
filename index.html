@@ -151,6 +151,9 @@
     position:absolute; transform: translate(-50%,-50%); z-index: 3;
     display:flex; align-items:center; gap:7px; cursor: default;
     transition: opacity .18s ease;
+    /* reset default <button> chrome (new-ball markers are buttons) */
+    appearance:none; -webkit-appearance:none; background:none; border:0;
+    padding:0; margin:0; font:inherit; color:inherit; text-align:inherit;
   }
   .ball .pt {
     width: 15px; height: 15px; border-radius:50%; flex:none;
