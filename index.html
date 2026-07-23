@@ -203,6 +203,34 @@
   #tip .t-read { font-size:12px; color: var(--ink-2); margin-top:7px; line-height:1.4; }
   #tip .t-new { display:inline-block; margin-top:8px; font-size:9px; letter-spacing:.14em; font-weight:800; background:var(--accent); color:var(--accent-ink); padding:2px 6px; border-radius:5px; }
 
+  /* ---------- Luci bag highlight on the map ---------- */
+  .plot.luci-on .ball:not(.is-bag) { opacity: .1; }
+  .plot.luci-on .ball.is-bag .pt {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--k) 26%, transparent), 0 0 0 6px var(--ring), 0 2px 8px rgba(0,0,0,.4);
+  }
+
+  /* ---------- Taking to the Luci ---------- */
+  .luci-h { display:flex; align-items:flex-end; justify-content:space-between; gap:12px; margin: 40px 0 14px; }
+  .luci-h h2 { font-size: 15px; text-transform: uppercase; letter-spacing:.18em; margin:0; font-weight:800; }
+  .luci-h h2::before { content:"🎳"; margin-right: 9px; font-size: 13px; vertical-align: 1px; }
+  .luci-h .hint { font-size:12px; color: var(--ink-3); display:block; margin-top:4px; }
+  .luci-count { font-size:11px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color: var(--accent-ink); background: var(--accent); padding:5px 11px; border-radius:999px; white-space:nowrap; }
+  .luci { display:grid; grid-template-columns: repeat(auto-fill, minmax(190px,1fr)); gap: 8px; counter-reset: luci; }
+  .luci-item {
+    display:flex; align-items:center; gap:11px; background: var(--panel); border:1px solid var(--line);
+    border-radius: 11px; padding: 10px 13px 10px 11px; position:relative;
+  }
+  .luci-item::before {
+    counter-increment: luci; content: counter(luci); font-size:10px; font-weight:800; font-variant-numeric:tabular-nums;
+    color: var(--ink-3); min-width:16px; text-align:center;
+  }
+  .luci-item .pt { width:13px;height:13px;border-radius:50%;background:var(--k); flex:none; box-shadow:0 0 0 3px color-mix(in srgb,var(--k) 22%, transparent); }
+  .luci-item .pt.empty { background: transparent; border:1.5px dashed var(--ink-3); box-shadow:none; }
+  .luci-item .li-info { min-width:0; }
+  .luci-item .li-nm { font-weight:700; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .luci-item .li-ty { font-size:10px; text-transform:uppercase; letter-spacing:.08em; color: var(--ink-3); }
+  .luci-item.is-extra { border-style:dashed; }
+
   /* ---------- New for 2026 ---------- */
   .new-h { display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin: 40px 0 14px; }
   .new-h h2 { font-size: 15px; text-transform: uppercase; letter-spacing:.18em; margin:0; font-weight:800; }
@@ -280,6 +308,7 @@
   <div class="toolbar">
     <div class="legend" id="legend"></div>
     <span class="spacer"></span>
+    <button class="toggle" id="luciToggle" aria-pressed="false">🎳 Luci bag</button>
     <button class="toggle" id="labelToggle" aria-pressed="true">Labels</button>
   </div>
 
@@ -298,6 +327,15 @@
       <div class="quad" style="right:12px; bottom:10px;">Less hook · late</div>
     </div>
   </div>
+
+  <section class="luci-h">
+    <div>
+      <h2>Taking to the Luci</h2>
+      <span class="hint">Your 12-ball bag · hover a ball for its spec</span>
+    </div>
+    <span class="luci-count" id="luciCount"></span>
+  </section>
+  <div class="luci" id="luci"></div>
 
   <section class="new-h">
     <h2>New for 2026</h2>
@@ -330,17 +368,47 @@
   // x: 0 = Early (left) → 100 = Late (right)
   // y: 0 = More Hook (top) → 100 = Less Hook (bottom)
   const BALLS = [
-    { n:"Equinox Solid",   t:"asymStrong", x:30, y:11 },
-    { n:"Viking",          t:"asymStrong", x:60, y:12 },
-    { n:"Rocket AI",       t:"symStrong",  x:82, y:14 },
-    { n:"Vengeance",       t:"symStrong",  x:12, y:20 },
-    { n:"Ion Max",         t:"asymStrong", x:31, y:20 },
-    { n:"Hyperdrive",      t:"asymStrong", x:44, y:17 },
-    { n:"Bionic",          t:"symStrong",  x:58, y:16 },
-    { n:"Monsoon",         t:"symStrong",  x:47, y:23 },
-    { n:"Transformer",     t:"asymStrong", x:30, y:25 },
-    { n:"Rockstar",        t:"symStrong",  x:45, y:35 },
-    { n:"Vengeance Returns",t:"symStrong", x:47, y:42, new:true, spec:{
+    { n:"Equinox Solid", t:"asymStrong", x:30, y:11, bag:true, spec:{
+        brand:"Storm", cover:"A2S Solid Reactive — 2000 grit", core:"Solarion A.I. · asymmetric",
+        rg:"2.48", diff:".054", psa:".018", oil:"Medium-heavy to heavy",
+        shape:"Reads early through the fronts with heavy flare and drives hard and continuously off the friction." } },
+    { n:"Viking", t:"asymStrong", x:60, y:12, spec:{
+        brand:"900 Global", cover:"RB90 Hybrid — Power Edge polish", core:"Strobe A.I. · asymmetric",
+        rg:"2.51", diff:".052", psa:".016", oil:"Medium-heavy",
+        shape:"Clean, defined midlane read followed by a very strong, angular backend." } },
+    { n:"Rocket AI", t:"symStrong", x:82, y:14, bag:true, spec:{
+        brand:"Storm", cover:"A1S Pearl — Power Edge polish", core:"Booster A.I. · symmetric",
+        rg:"2.53", diff:".048", psa:"— (sym)", oil:"Medium to dry",
+        shape:"Conserves energy for effortless length, then a sharp, defined move on the backend." } },
+    { n:"Vengeance", t:"symStrong", x:12, y:20, spec:{
+        brand:"900 Global", cover:"RB91 Solid — 2000 grit", core:"Vengeance · symmetric",
+        rg:"2.47", diff:".055", psa:"— (sym)", oil:"Medium-heavy",
+        shape:"Revs early with heavy flare for a strong, controllable midlane and a smooth-but-strong backend." } },
+    { n:"Ion Max", t:"asymStrong", x:31, y:20, spec:{
+        brand:"Storm", cover:"NRG Solid — 2000 grit", core:"Element Max A.I. · asymmetric",
+        rg:"2.47", diff:".055", psa:".014", oil:"Heavy",
+        shape:"Low-RG asym that grabs the heaviest oil early for a strong, torquey, controlled read." } },
+    { n:"Hyperdrive", t:"asymStrong", x:44, y:17, spec:{
+        brand:"Roto Grip", cover:"MicroTrax Solid — 2000 grit", core:"RST + A.I. · asymmetric",
+        rg:"2.52", diff:".055", psa:".017", oil:"Heavy / long",
+        shape:"Strong midlane traction with continuous, controllable motion — higher RG so it isn't overly early." } },
+    { n:"Bionic", t:"symStrong", x:58, y:16, bag:true, spec:{
+        brand:"Storm", cover:"NRG Hybrid — 4000 grit", core:"Torsion A.I. · symmetric",
+        rg:"2.47", diff:".050", psa:"— (sym)", oil:"Medium (benchmark)",
+        shape:"Smooth length with a strong midlane read and a controlled, readable backend." } },
+    { n:"Monsoon", t:"symStrong", x:47, y:23, spec:{
+        brand:"Storm", cover:"Reactor Solid — 2000 grit", core:"Atmos A.I. · symmetric",
+        rg:"2.53", diff:".042", psa:"— (sym)", oil:"Medium",
+        shape:"Grabs the midlane earlier and harder than the Typhoon — clean, readable, continuous." } },
+    { n:"Transformer", t:"asymStrong", x:30, y:25, spec:{
+        brand:"Roto Grip", cover:"V-R1 Solid — 4000 grit", core:"Morph-Wing · asymmetric",
+        rg:"2.51", diff:".051", psa:".015", oil:"Medium to medium-heavy",
+        shape:"Controlled midlane traction with a tunable, versatile, layout-sensitive shape." } },
+    { n:"Rockstar", t:"symStrong", x:45, y:35, bag:true, spec:{
+        brand:"Roto Grip", cover:"NanoStar Solid — 2000 grit", core:"Rocker + A.I. · symmetric",
+        rg:"2.48", diff:".050", psa:"— (sym)", oil:"Medium to heavy",
+        shape:"Heavy flare with aggressive traction through the whole lane and a strong, repeatable backend." } },
+    { n:"Vengeance Returns", t:"symStrong", x:47, y:42, new:true, bag:true, spec:{
         brand:"900 Global", line:"800 Series · High Performance",
         cover:"RB91 Nano Hybrid — Power Edge finish", core:"Blast A.I. · symmetric",
         rg:"2.47", diff:".055", psa:"— (sym)", oil:"Medium to medium-heavy", flare:"Medium-high",
@@ -348,10 +416,19 @@
         note:"Highest differential in the entire 900 Global line — the continuation of your Vengeance.",
         released:"Jun 2026",
         layout:"VLS · 5¼ × 4⅛ × 1¾", serial:"26GRND06N003", drilled:"21 Jul 2026", colorway:"Blue / white / purple pearl" } },
-    { n:"Phaze II Pearl",  t:"symStrong",  x:67, y:36 },
-    { n:"Gremlin Tour X",  t:"symStrong",  x:19, y:40 },
-    { n:"Ion Pro",         t:"asymWeak",   x:71, y:40 },
-    { n:"Transform",       t:"asymStrong", x:22, y:46, new:true, spec:{
+    { n:"Phaze II Pearl", t:"symStrong", x:67, y:36, bag:true, spec:{
+        brand:"Storm", cover:"TX-25 Pearl — Power Edge polish", core:"Velocity · symmetric",
+        rg:"2.48", diff:".051", psa:"— (sym)", oil:"Medium to medium-heavy",
+        shape:"Clean and pushy through the fronts, revs in the midlane, strong continuous angular backend." } },
+    { n:"Gremlin Tour X", t:"symStrong", x:19, y:40, spec:{
+        brand:"Roto Grip", cover:"V-R1 Hybrid (2:1) — 4000 grit", core:"Rondure Tour-X · asymmetric",
+        rg:"2.48", diff:".034", psa:".011", oil:"Medium / sport",
+        shape:"Smooth and continuous — reads the midlane cleanly with a controlled, predictable backend." } },
+    { n:"Ion Pro", t:"asymWeak", x:71, y:40, bag:true, spec:{
+        brand:"Storm", full:"Ion Pro (Solid)", cover:"TX-16 Solid — Power Edge polish", core:"Element Tour A.I. · asymmetric",
+        rg:"2.47", diff:".035", psa:".014", oil:"Medium to medium-heavy",
+        shape:"Clean fronts with a strong, defined midlane read and a controllable, versatile backend." } },
+    { n:"Transform", t:"asymStrong", x:22, y:46, new:true, bag:true, spec:{
         brand:"Roto Grip", full:"Transform Pearl", line:"HP5",
         cover:"MicroTrax Pearl Reactive — 100% nano-loaded", core:"Morph-Wing · asymmetric",
         rg:"2.51", diff:".051", psa:".015", oil:"Medium to heavy", flare:"—",
@@ -359,14 +436,45 @@
         note:"Pearl sibling of your Transformer — the drill-tunable wing lets your pro shop reshape it.",
         released:"Jul 2026",
         layout:"VLS · 5¾ × 4¼ × 1½", serial:"26RLTF22B043", drilled:"21 Jul 2026", colorway:"Red / black pearl" } },
-    { n:"Origin",          t:"asymStrong", x:27, y:50 },
-    { n:"DNA Coil",        t:"asymWeak",   x:50, y:48 },
-    { n:"Ion Max Pearl",   t:"asymStrong", x:33, y:57 },
-    { n:"Next Factor",     t:"asymWeak",   x:66, y:55 },
-    { n:"Typhoon",         t:"symStrong",  x:82, y:55 },
-    { n:"Concept",         t:"symStrong",  x:49, y:63 },
-    { n:"Gremlin",         t:"asymStrong", x:44, y:69 },
+    { n:"Origin", t:"asymStrong", x:27, y:50, spec:{
+        brand:"900 Global", cover:"RB93 Hybrid — Power Edge polish", core:"Ellipse Asym A.I. · asymmetric",
+        rg:"2.48", diff:".050", psa:".020", oil:"Medium to heavy",
+        shape:"Revs up quickly, very aggressive in the midlane, big move at the breakpoint." } },
+    { n:"DNA Coil", t:"asymWeak", x:50, y:48, spec:{
+        brand:"Storm", cover:"EXO Pearl — Reacta Gloss", core:"Supercoil · asymmetric",
+        rg:"2.47", diff:".053", psa:".023", oil:"Medium",
+        shape:"Early-revving read that evolves into a longer, more angular motion as lanes break down." } },
+    { n:"Ion Max Pearl", t:"asymStrong", x:33, y:57, spec:{
+        brand:"Storm", cover:"NRG Pearl — Power Edge polish", core:"Element Max A.I. · asymmetric",
+        rg:"2.47", diff:".055", psa:".014", oil:"Medium-heavy to heavy",
+        shape:"Clean through the fronts with a strong, continuous, angular move off the friction." } },
+    { n:"Next Factor", t:"asymWeak", x:66, y:55, bag:true, spec:{
+        brand:"Storm", full:"NeXt Factor", cover:"R3S Pearl — Power Edge polish", core:"RAD-TQ · asymmetric",
+        rg:"2.56", diff:".051", psa:".017", oil:"Medium",
+        shape:"High-RG design that glides the fronts, reads the midlane with stability, and swings dynamically at the breakpoint." } },
+    { n:"Typhoon", t:"symStrong", x:82, y:55, bag:true, spec:{
+        brand:"Storm", cover:"Reactor Pearl — Power Edge polish", core:"Atmos A.I. · symmetric",
+        rg:"2.53", diff:".042", psa:"— (sym)", oil:"Light to medium",
+        shape:"Controllable length and a clean midlane read for a predictable move without over-hooking." } },
+    { n:"Concept", t:"symStrong", x:49, y:63, spec:{
+        brand:"Storm", cover:"ARC Pearl — 1000 grit", core:"Radius · symmetric",
+        rg:"2.61", diff:".020", psa:"— (sym)", oil:"Medium / sport (control)",
+        shape:"Smooth, predictable, low-flare motion with strong midlane traction — a reactive urethane alternative." } },
+    { n:"Gremlin", t:"asymStrong", x:44, y:69, spec:{
+        brand:"Roto Grip", cover:"V-R1 Pearl — polish", core:"Rondure MaxD · asymmetric",
+        rg:"2.50", diff:".058", psa:".010", oil:"Medium",
+        shape:"Clean skid through the heads with a sharp, responsive, angular snap on the backend." } },
   ];
+
+  // Balls travelling to the Luci — the 12-ball bag. Some are off-map (spare / not plotted).
+  const LUCI = [
+    "Equinox Solid", "Bionic", "Rockstar", "Ion Pro", "Ion Pro Solid", "Rocket AI",
+    "Typhoon", "Next Factor", "Plastic", "Transform", "Vengeance Returns", "Phaze II Pearl"
+  ];
+  const LUCI_EXTRA = {
+    "Ion Pro Solid": { note:"Confirm vs. mapped Ion Pro — research shows the mapped Ion Pro is the Solid.", t:"asymWeak" },
+    "Plastic":       { note:"Plastic spare ball — off-map (not a hook ball).", t:null }
+  };
 
   const plot = document.getElementById("plot");
   const roster = document.getElementById("roster");
@@ -381,7 +489,7 @@
   // ---- Plot dots ----
   const ballEls = BALLS.map(b => {
     const el = document.createElement(b.new || false ? "button" : "div");
-    el.className = "ball" + (b.new ? " is-new" : "");
+    el.className = "ball" + (b.new ? " is-new" : "") + (b.bag ? " is-bag" : "");
     el.style.setProperty("--k", TYPES[b.t].color);
     el.style.left = b.x + "%";
     el.style.top  = b.y + "%";
@@ -437,10 +545,45 @@
       const c = document.createElement("div");
       c.className = "card" + (b.new ? " is-new" : "");
       c.style.setProperty("--k", TYPES[b.t].color);
-      c.innerHTML = `<span class="pt"></span><div class="info"><div class="nm">${b.n}</div><div class="ty">${TYPES[b.t].label}</div></div>`;
+      const sub = b.spec ? `${b.spec.brand}${b.spec.full && b.spec.full!==b.n ? " " + b.spec.full : ""}` : TYPES[b.t].label;
+      c.innerHTML = `<span class="pt"></span><div class="info"><div class="nm">${b.n}</div><div class="ty">${sub}</div></div>`;
+      c.tabIndex = 0;
+      const show = (ev) => showTip(ev, b);
+      c.addEventListener("mouseenter", show);
+      c.addEventListener("mousemove", show);
+      c.addEventListener("mouseleave", hideTip);
+      c.addEventListener("focus", show);
+      c.addEventListener("blur", hideTip);
       roster.appendChild(c);
       return { c, b };
     });
+
+  // ---- Taking to the Luci (12-ball bag) ----
+  const luci = document.getElementById("luci");
+  const byName = Object.fromEntries(BALLS.map(b => [b.n, b]));
+  LUCI.forEach(name => {
+    const b = byName[name];
+    const extra = LUCI_EXTRA[name];
+    const item = document.createElement(b ? "button" : "div");
+    item.className = "luci-item" + (b ? "" : " is-extra");
+    const t = b ? b.t : (extra && extra.t);
+    if (t) item.style.setProperty("--k", TYPES[t].color);
+    const sub = b ? (b.spec ? b.spec.brand + (b.spec.full && b.spec.full!==b.n ? " " + b.spec.full : "") : TYPES[b.t].label)
+                  : (extra ? extra.note : "Off-map");
+    item.innerHTML = `<span class="pt${t ? "" : " empty"}"></span>` +
+      `<div class="li-info"><div class="li-nm">${name}</div><div class="li-ty">${sub}</div></div>`;
+    if (b){
+      item.tabIndex = 0;
+      const show = (ev) => showTip(ev, b);
+      item.addEventListener("mouseenter", show);
+      item.addEventListener("mousemove", show);
+      item.addEventListener("mouseleave", hideTip);
+      item.addEventListener("focus", show);
+      item.addEventListener("blur", hideTip);
+    }
+    luci.appendChild(item);
+  });
+  document.getElementById("luciCount").textContent = LUCI.length + " balls";
 
   // ---- New for 2026 detail cards ----
   const newballs = document.getElementById("newballs");
@@ -498,6 +641,14 @@
     ballEls.forEach(({el,b}) => el.classList.toggle("is-dim", !active.has(b.t)));
     cardEls.forEach(({c,b}) => c.classList.toggle("is-dim", !active.has(b.t)));
   }
+
+  // ---- Luci bag highlight toggle ----
+  const luciToggle = document.getElementById("luciToggle");
+  luciToggle.addEventListener("click", () => {
+    const on = luciToggle.getAttribute("aria-pressed") === "true";
+    luciToggle.setAttribute("aria-pressed", on ? "false" : "true");
+    plot.classList.toggle("luci-on", !on);
+  });
 
   // ---- Label toggle ----
   const labelToggle = document.getElementById("labelToggle");
