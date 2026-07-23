@@ -98,7 +98,7 @@
   }
   .stat b { display:block; font-size: 26px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
   .stat span { font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-3); }
-  .stat.is-new b { color: var(--accent); }
+  .stat.hl b { color: var(--accent); }
 
   /* ---------- Toolbar ---------- */
   .toolbar { display:flex; flex-wrap:wrap; gap: 10px 8px; align-items:center; margin: 26px 0 14px; }
@@ -156,10 +156,13 @@
     padding:0; margin:0; font:inherit; color:inherit; text-align:inherit;
   }
   .ball .pt {
+    position: relative;
     width: 15px; height: 15px; border-radius:50%; flex:none;
     background: var(--k);
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--k) 24%, transparent), 0 2px 6px rgba(0,0,0,.35);
   }
+  /* invisible enlarged touch target */
+  .ball .pt::after { content:""; position:absolute; inset:-8px; border-radius:50%; }
   .ball .lbl {
     font-size: 11.5px; font-weight: 650; color: var(--ink); white-space: nowrap;
     text-shadow: 0 1px 3px color-mix(in srgb, var(--panel) 82%, transparent), 0 0 2px color-mix(in srgb, var(--panel) 82%, transparent);
@@ -168,21 +171,6 @@
   /* labels that would overflow the right edge flip to the left of the dot */
   .ball.flip { flex-direction: row-reverse; }
   .ball.is-dim { opacity: .12; }
-  .ball.is-new .pt {
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--k) 26%, transparent), 0 0 0 6px var(--ring), 0 2px 8px rgba(0,0,0,.4);
-  }
-  .ball.is-new .lbl { color: var(--accent); font-weight: 800; }
-  .ball.is-new .lbl::after {
-    content: "NEW"; margin-left: 7px; font-size: 8.5px; letter-spacing:.12em; font-weight:800;
-    background: var(--accent); color: var(--accent-ink); padding: 1.5px 5px; border-radius: 5px; vertical-align: 1.5px;
-  }
-  @media (prefers-reduced-motion: no-preference) {
-    .ball.is-new .pt { animation: pulse 2.4s ease-in-out infinite; }
-    @keyframes pulse {
-      0%,100% { box-shadow: 0 0 0 3px color-mix(in srgb, var(--k) 26%, transparent), 0 0 0 5px var(--ring), 0 2px 8px rgba(0,0,0,.4); }
-      50%     { box-shadow: 0 0 0 3px color-mix(in srgb, var(--k) 26%, transparent), 0 0 0 9px color-mix(in srgb, var(--ring) 12%, transparent), 0 2px 8px rgba(0,0,0,.4); }
-    }
-  }
   .ball:focus-visible { outline: none; }
   .ball:focus-visible .pt { box-shadow: 0 0 0 3px var(--k), 0 0 0 6px var(--ring); }
   /* estimated-position dot: hollow with a dashed ring */
@@ -209,6 +197,26 @@
   #tip .t-read { font-size:12px; color: var(--ink-2); margin-top:7px; line-height:1.4; }
   #tip .t-est { font-size:11px; color: var(--ink-3); margin-top:8px; font-style:italic; }
   #tip .t-new { display:inline-block; margin-top:8px; font-size:9px; letter-spacing:.14em; font-weight:800; background:var(--accent); color:var(--accent-ink); padding:2px 6px; border-radius:5px; }
+  #tip .t-close { display:none; }
+  /* Mobile / touch: dock the details as a bottom sheet instead of a floating tooltip */
+  #tip.sheet {
+    position: fixed; left: 12px; right: 12px; bottom: 12px; top: auto;
+    width: auto; max-width: none; pointer-events: auto;
+    padding: 20px 16px 18px; border-radius: 18px;
+    box-shadow: 0 -12px 44px -14px rgba(0,0,0,.55);
+  }
+  #tip.sheet::before { content:""; display:block; width:38px; height:4px; border-radius:2px; background:var(--line); margin:-8px auto 14px; }
+  #tip.sheet .t-name { font-size: 16px; }
+  #tip.sheet .t-grid { gap: 6px 12px; margin-top: 9px; }
+  #tip.sheet .t-grid span { font-size: 11px; }
+  #tip.sheet .t-grid b { font-size: 13px; }
+  #tip.sheet .t-read { font-size: 13px; }
+  #tip.sheet .t-close {
+    display:flex; align-items:center; justify-content:center; position:absolute; top:12px; right:12px;
+    width:34px; height:34px; border-radius:50%; border:1px solid var(--line); background:var(--panel);
+    color:var(--ink-2); font-size:20px; line-height:1; cursor:pointer; appearance:none;
+  }
+  #tip.sheet .t-close:hover { color:var(--ink); border-color:var(--ink-3); }
 
   /* ---------- Luci bag highlight on the map ---------- */
   .plot.luci-on .ball:not(.is-bag) { opacity: .1; }
@@ -284,17 +292,32 @@
   .card .info { min-width:0; }
   .card .nm { font-weight:700; font-size:13.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .card .ty { font-size:10.5px; text-transform:uppercase; letter-spacing:.1em; color: var(--ink-3); }
-  .card.is-new { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--panel)); }
-  .card.is-new .nm::after { content:"NEW"; margin-left:8px; font-size:8px; letter-spacing:.12em; font-weight:800; background:var(--accent); color:var(--accent-ink); padding:1.5px 5px; border-radius:5px; vertical-align:1px; }
   .card.is-dim { opacity:.3; }
 
   footer { margin: 40px 0 6px; color: var(--ink-3); font-size: 11.5px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; border-top:1px solid var(--line-soft); padding-top:16px; }
   footer .mono { font-family: ui-monospace, Menlo, monospace; }
 
-  @media (max-width: 560px) {
-    .ball .lbl { display:none; }
-    .plot-frame { padding: 30px 24px 26px; }
-    h1 .thin { font-size: .5em; }
+  .chip:focus-visible, .toggle:focus-visible, .card:focus-visible,
+  .luci-item:focus-visible, .t-close:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px;
+  }
+
+  @media (max-width: 600px) {
+    .wrap { padding: 16px 14px 32px; }
+    .plot { aspect-ratio: 1 / 1; }
+    .plot-frame { padding: 30px 22px 26px; }
+    .ball .pt { width: 17px; height: 17px; }
+    .ball .lbl { font-size: 11px; }
+    h1 .thin { font-size: .52em; }
+    .stats { width: 100%; }
+    .stat { flex: 1 1 0; min-width: 0; padding: 11px 12px; }
+    .stat b { font-size: 22px; }
+    .toolbar { gap: 8px 6px; }
+    .toggle, .chip { padding: 9px 13px; }  /* comfortable tap size */
+    .luci { grid-template-columns: 1fr; }  /* travel bag reads cleaner as a single column */
+  }
+  @media (max-width: 380px) {
+    .roster { grid-template-columns: 1fr; }
   }
 </style>
 
@@ -307,7 +330,7 @@
     </div>
     <div class="stats">
       <div class="stat"><b id="s-total">23</b><span>Mapped</span></div>
-      <div class="stat is-new"><b>2</b><span>New</span></div>
+      <div class="stat hl"><b id="s-luci">12</b><span>Luci bag</span></div>
       <div class="stat"><b>4</b><span>Off-map</span></div>
     </div>
   </header>
@@ -338,15 +361,15 @@
   <section class="luci-h">
     <div>
       <h2>Taking to the Luci</h2>
-      <span class="hint">Your 12-ball bag · hover a ball for its spec</span>
+      <span class="hint">Your 12-ball bag · tap a ball for its spec</span>
     </div>
     <span class="luci-count" id="luciCount"></span>
   </section>
   <div class="luci" id="luci"></div>
 
   <section class="new-h">
-    <h2>New for 2026</h2>
-    <span class="hint">Researched specs · added to the map</span>
+    <h2>Latest additions</h2>
+    <span class="hint">Full spec &amp; your drill layout</span>
   </section>
   <div class="newballs" id="newballs"></div>
 
@@ -536,22 +559,34 @@
         `</div></div>`;
     }
     if (b.estPos) html += `<div class="t-est">≈ Position estimated — nudge me to your real spot</div>`;
-    if (b.new) html += `<span class="t-new">NEW · ${b.spec?b.spec.released:"2026"}</span>`;
+    html += `<button class="t-close" aria-label="Close">×</button>`;
     tip.innerHTML = html;
     tip.classList.add("on");
     tip.setAttribute("aria-hidden","false");
-    const px = (ev.clientX ?? (ev.target.getBoundingClientRect().left)) + 16;
-    const py = (ev.clientY ?? (ev.target.getBoundingClientRect().top)) + 16;
-    const w = tip.offsetWidth, h = tip.offsetHeight;
-    tip.style.left = Math.min(px, window.innerWidth - w - 12) + "px";
-    tip.style.top  = Math.min(py, window.innerHeight - h - 12) + "px";
+    // Coarse pointers (phones/tablets) get a fixed bottom sheet; fine pointers float near the cursor.
+    const coarse = window.matchMedia("(hover: none), (pointer: coarse)").matches;
+    tip.classList.toggle("sheet", coarse);
+    if (coarse){
+      tip.style.left = tip.style.top = "";
+    } else {
+      const px = (ev.clientX ?? (ev.target.getBoundingClientRect().left)) + 16;
+      const py = (ev.clientY ?? (ev.target.getBoundingClientRect().top)) + 16;
+      const w = tip.offsetWidth, h = tip.offsetHeight;
+      tip.style.left = Math.min(px, window.innerWidth - w - 12) + "px";
+      tip.style.top  = Math.min(py, window.innerHeight - h - 12) + "px";
+    }
   }
   function hideTip(){ tip.classList.remove("on"); tip.setAttribute("aria-hidden","true"); }
+  // Close the sheet via its button or by tapping away (touch has no mouseleave).
+  tip.addEventListener("click", e => { if (e.target.closest(".t-close")) hideTip(); });
+  document.addEventListener("pointerdown", e => {
+    if (!e.target.closest(".ball, .card, .luci-item, #tip")) hideTip();
+  });
 
   // ---- Roster cards ----
   const cardEls = BALLS
     .slice()
-    .sort((a,b) => (b.new?1:0)-(a.new?1:0) || a.n.localeCompare(b.n))
+    .sort((a,b) => a.n.localeCompare(b.n))
     .map(b => {
       const c = document.createElement("div");
       c.className = "card" + (b.new ? " is-new" : "");
@@ -610,7 +645,6 @@
            <div class="nb-name">${b.n}</div>
            <div class="nb-sub">${s.brand}${s.full && s.full!==b.n ? " " + s.full : ""} · ${s.line} · ${TYPES[b.t].label}</div>
          </div>
-         <span class="nb-badge">NEW</span>
        </div>
        <p class="nb-shape">${s.shape}</p>
        ${s.layout ? `<div class="nb-layout">
@@ -663,9 +697,12 @@
 
   // ---- Label toggle ----
   const labelToggle = document.getElementById("labelToggle");
-  labelToggle.addEventListener("click", () => {
-    const on = labelToggle.getAttribute("aria-pressed") === "true";
-    labelToggle.setAttribute("aria-pressed", on ? "false" : "true");
-    ballEls.forEach(({el}) => el.querySelectorAll(".lbl").forEach(l => l.style.display = on ? "none" : ""));
-  });
+  const setLabels = (show) => {
+    labelToggle.setAttribute("aria-pressed", show ? "true" : "false");
+    ballEls.forEach(({el}) => el.querySelectorAll(".lbl").forEach(l => l.style.display = show ? "" : "none"));
+  };
+  labelToggle.addEventListener("click", () =>
+    setLabels(labelToggle.getAttribute("aria-pressed") !== "true"));
+  // On small screens the plot is dense — start with labels off (tap a dot for details).
+  if (window.matchMedia("(max-width: 600px)").matches) setLabels(false);
 </script>
