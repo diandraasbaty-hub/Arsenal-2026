@@ -220,6 +220,14 @@
   .nb-sub { font-size:11.5px; color: var(--ink-3); margin-top:2px; }
   .nb-badge { margin-left:auto; font-size:9px; letter-spacing:.14em; font-weight:800; background:var(--accent); color:var(--accent-ink); padding:3px 7px; border-radius:6px; align-self:flex-start; }
   .nb-shape { font-size:13px; color: var(--ink-2); margin:13px 0 0; line-height:1.5; }
+  .nb-layout {
+    margin-top:14px; padding:11px 14px; border-radius:11px;
+    background: color-mix(in srgb, var(--accent) 12%, var(--panel-2));
+    border:1px solid color-mix(in srgb, var(--accent) 34%, var(--line));
+  }
+  .nb-layout-k { font-size:9.5px; text-transform:uppercase; letter-spacing:.14em; color: var(--accent); font-weight:800; }
+  .nb-layout-v { font-size:17px; font-weight:800; letter-spacing:.01em; margin-top:2px; font-variant-numeric: tabular-nums; }
+  .nb-layout-m { font-size:11px; color: var(--ink-3); margin-top:3px; font-variant-numeric: tabular-nums; }
   .nb-grid { display:grid; grid-template-columns: repeat(2, 1fr); gap:1px; margin-top:14px; background: var(--line); border:1px solid var(--line); border-radius:10px; overflow:hidden; }
   .nb-cell { background: var(--panel-2); padding: 8px 11px; }
   .nb-cell.wide { grid-column: 1 / -1; }
@@ -338,7 +346,8 @@
         rg:"2.47", diff:".055", psa:"— (sym)", oil:"Medium to medium-heavy", flare:"Medium-high",
         shape:"Strong mid-lane read with added length and a controlled, powerful backend.",
         note:"Highest differential in the entire 900 Global line — the continuation of your Vengeance.",
-        released:"Jun 2026" } },
+        released:"Jun 2026",
+        layout:"VLS · 5¼ × 4⅛ × 1¾", serial:"26GRND06N003", drilled:"21 Jul 2026", colorway:"Blue / white / purple pearl" } },
     { n:"Phaze II Pearl",  t:"symStrong",  x:67, y:36 },
     { n:"Gremlin Tour X",  t:"symStrong",  x:19, y:40 },
     { n:"Ion Pro",         t:"asymWeak",   x:71, y:40 },
@@ -348,7 +357,8 @@
         rg:"2.51", diff:".051", psa:".015", oil:"Medium to heavy", flare:"—",
         shape:"Clean through the fronts, holds its line in oil, then a crisp, angular backend.",
         note:"Pearl sibling of your Transformer — the drill-tunable wing lets your pro shop reshape it.",
-        released:"Jul 2026" } },
+        released:"Jul 2026",
+        layout:"VLS · 5¾ × 4¼ × 1½", serial:"26RLTF22B043", drilled:"21 Jul 2026", colorway:"Red / black pearl" } },
     { n:"Origin",          t:"asymStrong", x:27, y:50 },
     { n:"DNA Coil",        t:"asymWeak",   x:50, y:48 },
     { n:"Ion Max Pearl",   t:"asymStrong", x:33, y:57 },
@@ -404,6 +414,7 @@
           `<span>Core</span><b>${s.core}</b>` +
           `<span>RG / Diff / PSA</span><b>${s.rg} / ${s.diff} / ${s.psa}</b>` +
           `<span>Oil</span><b>${s.oil}</b>` +
+          (s.layout ? `<span>Layout</span><b>${s.layout}</b>` : "") +
         `</div></div>`;
     }
     if (b.new) html += `<span class="t-new">NEW · ${b.spec?b.spec.released:"2026"}</span>`;
@@ -448,6 +459,11 @@
          <span class="nb-badge">NEW</span>
        </div>
        <p class="nb-shape">${s.shape}</p>
+       ${s.layout ? `<div class="nb-layout">
+           <div class="nb-layout-k">My layout</div>
+           <div class="nb-layout-v">${s.layout}</div>
+           <div class="nb-layout-m">${s.serial} · drilled ${s.drilled}</div>
+         </div>` : ""}
        <div class="nb-grid">
          <div class="nb-cell wide"><div class="k">Coverstock</div><div class="v">${s.cover}</div></div>
          <div class="nb-cell wide"><div class="k">Core</div><div class="v">${s.core}</div></div>
@@ -455,6 +471,7 @@
          <div class="nb-cell"><div class="k">Differential</div><div class="v">${s.diff}</div></div>
          <div class="nb-cell"><div class="k">Int. Diff (PSA)</div><div class="v">${s.psa}</div></div>
          <div class="nb-cell"><div class="k">Oil / Released</div><div class="v">${s.oil} · ${s.released}</div></div>
+         ${s.colorway ? `<div class="nb-cell wide"><div class="k">Colorway</div><div class="v">${s.colorway}</div></div>` : ""}
        </div>
        <p class="nb-note">${s.note}</p>`;
     newballs.appendChild(card);
