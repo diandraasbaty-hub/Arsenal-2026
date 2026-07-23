@@ -182,6 +182,9 @@
   }
   .ball:focus-visible { outline: none; }
   .ball:focus-visible .pt { box-shadow: 0 0 0 3px var(--k), 0 0 0 6px var(--ring); }
+  /* estimated-position dot: hollow with a dashed ring */
+  .ball.is-est .pt { background: color-mix(in srgb, var(--k) 40%, var(--panel)); outline: 1.5px dashed var(--k); outline-offset: 2px; }
+  .ball.is-est .lbl::after { content: "≈"; margin-left: 5px; color: var(--ink-3); font-weight: 700; }
 
   /* ---------- Tooltip ---------- */
   #tip {
@@ -201,6 +204,7 @@
   #tip .t-name .d { width:10px;height:10px;border-radius:50%;background:var(--k); flex:none; }
   #tip .t-type { font-size:11px; text-transform:uppercase; letter-spacing:.12em; color: var(--ink-3); margin-top:3px; }
   #tip .t-read { font-size:12px; color: var(--ink-2); margin-top:7px; line-height:1.4; }
+  #tip .t-est { font-size:11px; color: var(--ink-3); margin-top:8px; font-style:italic; }
   #tip .t-new { display:inline-block; margin-top:8px; font-size:9px; letter-spacing:.14em; font-weight:800; background:var(--accent); color:var(--accent-ink); padding:2px 6px; border-radius:5px; }
 
   /* ---------- Luci bag highlight on the map ---------- */
@@ -299,7 +303,7 @@
       <p class="meta-caption">PAP 4 7/8 × 1 1/4 up &nbsp;·&nbsp; layout: hook potential (vertical) × ball timing (horizontal)</p>
     </div>
     <div class="stats">
-      <div class="stat"><b id="s-total">22</b><span>Mapped</span></div>
+      <div class="stat"><b id="s-total">23</b><span>Mapped</span></div>
       <div class="stat is-new"><b>2</b><span>New</span></div>
       <div class="stat"><b>4</b><span>Off-map</span></div>
     </div>
@@ -351,7 +355,7 @@
 
   <footer>
     <span>Full Arsenal · PWBA 2026 · Diandra Asbaty</span>
-    <span class="mono">22 mapped · 0 pending · 4 off-map</span>
+    <span class="mono">23 mapped · 0 pending · 4 off-map</span>
   </footer>
 </div>
 
@@ -420,14 +424,18 @@
         brand:"Storm", cover:"TX-25 Pearl — Power Edge polish", core:"Velocity · symmetric",
         rg:"2.48", diff:".051", psa:"— (sym)", oil:"Medium to medium-heavy",
         shape:"Clean and pushy through the fronts, revs in the midlane, strong continuous angular backend." } },
-    { n:"Gremlin Tour X", t:"symStrong", x:19, y:40, spec:{
+    { n:"Gremlin Tour X", t:"asymWeak", x:19, y:40, spec:{
         brand:"Roto Grip", cover:"V-R1 Hybrid (2:1) — 4000 grit", core:"Rondure Tour-X · asymmetric",
         rg:"2.48", diff:".034", psa:".011", oil:"Medium / sport",
         shape:"Smooth and continuous — reads the midlane cleanly with a controlled, predictable backend." } },
     { n:"Ion Pro", t:"asymWeak", x:71, y:40, bag:true, spec:{
-        brand:"Storm", full:"Ion Pro (Solid)", cover:"TX-16 Solid — Power Edge polish", core:"Element Tour A.I. · asymmetric",
+        brand:"Storm", full:"Ion Pro (Hybrid)", cover:"TX-16 Hybrid — 4000 grit", core:"Element Tour A.I. · asymmetric",
         rg:"2.47", diff:".035", psa:".014", oil:"Medium to medium-heavy",
-        shape:"Clean fronts with a strong, defined midlane read and a controllable, versatile backend." } },
+        shape:"Cleaner benchmark asym — reads a touch later than the Ion Pro Solid with a controllable, versatile backend." } },
+    { n:"Ion Pro Solid", t:"asymWeak", x:58, y:34, bag:true, estPos:true, spec:{
+        brand:"Storm", full:"Ion Pro Solid", cover:"TX-16 Solid — Power Edge polish", core:"Element Tour A.I. · asymmetric",
+        rg:"2.47", diff:".035", psa:".014", oil:"Medium to medium-heavy",
+        shape:"Same benchmark asym core as the Ion Pro, but the solid cover reads earlier and stronger in oil." } },
     { n:"Transform", t:"asymStrong", x:22, y:46, new:true, bag:true, spec:{
         brand:"Roto Grip", full:"Transform Pearl", line:"HP5",
         cover:"MicroTrax Pearl Reactive — 100% nano-loaded", core:"Morph-Wing · asymmetric",
@@ -452,11 +460,11 @@
         brand:"Storm", full:"NeXt Factor", cover:"R3S Pearl — Power Edge polish", core:"RAD-TQ · asymmetric",
         rg:"2.56", diff:".051", psa:".017", oil:"Medium",
         shape:"High-RG design that glides the fronts, reads the midlane with stability, and swings dynamically at the breakpoint." } },
-    { n:"Typhoon", t:"symStrong", x:82, y:55, bag:true, spec:{
+    { n:"Typhoon", t:"symWeak", x:82, y:55, bag:true, spec:{
         brand:"Storm", cover:"Reactor Pearl — Power Edge polish", core:"Atmos A.I. · symmetric",
         rg:"2.53", diff:".042", psa:"— (sym)", oil:"Light to medium",
         shape:"Controllable length and a clean midlane read for a predictable move without over-hooking." } },
-    { n:"Concept", t:"symStrong", x:49, y:63, spec:{
+    { n:"Concept", t:"symWeak", x:49, y:63, spec:{
         brand:"Storm", cover:"ARC Pearl — 1000 grit", core:"Radius · symmetric",
         rg:"2.61", diff:".020", psa:"— (sym)", oil:"Medium / sport (control)",
         shape:"Smooth, predictable, low-flare motion with strong midlane traction — a reactive urethane alternative." } },
@@ -472,8 +480,7 @@
     "Typhoon", "Next Factor", "Plastic", "Transform", "Vengeance Returns", "Phaze II Pearl"
   ];
   const LUCI_EXTRA = {
-    "Ion Pro Solid": { note:"Confirm vs. mapped Ion Pro — research shows the mapped Ion Pro is the Solid.", t:"asymWeak" },
-    "Plastic":       { note:"Plastic spare ball — off-map (not a hook ball).", t:null }
+    "Plastic": { note:"Plastic spare ball — off-map (not a hook ball).", t:null }
   };
 
   const plot = document.getElementById("plot");
@@ -489,7 +496,7 @@
   // ---- Plot dots ----
   const ballEls = BALLS.map(b => {
     const el = document.createElement(b.new || false ? "button" : "div");
-    el.className = "ball" + (b.new ? " is-new" : "") + (b.bag ? " is-bag" : "");
+    el.className = "ball" + (b.new ? " is-new" : "") + (b.bag ? " is-bag" : "") + (b.estPos ? " is-est" : "");
     el.style.setProperty("--k", TYPES[b.t].color);
     el.style.left = b.x + "%";
     el.style.top  = b.y + "%";
@@ -525,6 +532,7 @@
           (s.layout ? `<span>Layout</span><b>${s.layout}</b>` : "") +
         `</div></div>`;
     }
+    if (b.estPos) html += `<div class="t-est">≈ Position estimated — nudge me to your real spot</div>`;
     if (b.new) html += `<span class="t-new">NEW · ${b.spec?b.spec.released:"2026"}</span>`;
     tip.innerHTML = html;
     tip.classList.add("on");
