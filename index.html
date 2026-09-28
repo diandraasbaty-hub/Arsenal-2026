@@ -1,3 +1,9 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Diandra Asbaty's PWBA 2026 bowling arsenal, mapped by hook potential and ball timing.">
 <title>Arsenal Map — PWBA 2026 · Diandra Asbaty</title>
 <style>
   :root {
@@ -149,7 +155,7 @@
 
   .ball {
     position:absolute; transform: translate(-50%,-50%); z-index: 3;
-    display:flex; align-items:center; gap:7px; cursor: default;
+    display:flex; align-items:center; gap:7px; cursor: pointer;
     transition: opacity .18s ease;
     /* reset default <button> chrome (new-ball markers are buttons) */
     appearance:none; -webkit-appearance:none; background:none; border:0;
@@ -196,7 +202,6 @@
   #tip .t-type { font-size:11px; text-transform:uppercase; letter-spacing:.12em; color: var(--ink-3); margin-top:3px; }
   #tip .t-read { font-size:12px; color: var(--ink-2); margin-top:7px; line-height:1.4; }
   #tip .t-est { font-size:11px; color: var(--ink-3); margin-top:8px; font-style:italic; }
-  #tip .t-new { display:inline-block; margin-top:8px; font-size:9px; letter-spacing:.14em; font-weight:800; background:var(--accent); color:var(--accent-ink); padding:2px 6px; border-radius:5px; }
   #tip .t-close { display:none; }
   /* Mobile / touch: dock the details as a bottom sheet instead of a floating tooltip */
   #tip.sheet {
@@ -245,6 +250,7 @@
   .luci-item .li-nm { font-weight:700; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .luci-item .li-ty { font-size:10px; text-transform:uppercase; letter-spacing:.08em; color: var(--ink-3); }
   .luci-item.is-extra { border-style:dashed; }
+  button.luci-item { font:inherit; color:inherit; text-align:left; width:100%; cursor:pointer; appearance:none; -webkit-appearance:none; }
 
   /* ---------- New for 2026 ---------- */
   .new-h { display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin: 40px 0 14px; }
@@ -261,7 +267,6 @@
   .nb-pt { width:20px; height:20px; border-radius:50%; background:var(--k); flex:none; box-shadow:0 0 0 4px color-mix(in srgb,var(--k) 22%, transparent); }
   .nb-name { font-size:19px; font-weight:800; letter-spacing:-.01em; line-height:1.05; }
   .nb-sub { font-size:11.5px; color: var(--ink-3); margin-top:2px; }
-  .nb-badge { margin-left:auto; font-size:9px; letter-spacing:.14em; font-weight:800; background:var(--accent); color:var(--accent-ink); padding:3px 7px; border-radius:6px; align-self:flex-start; }
   .nb-shape { font-size:13px; color: var(--ink-2); margin:13px 0 0; line-height:1.5; }
   .nb-layout {
     margin-top:14px; padding:11px 14px; border-radius:11px;
@@ -320,6 +325,8 @@
     .roster { grid-template-columns: 1fr; }
   }
 </style>
+</head>
+<body>
 
 <div class="wrap">
   <header>
@@ -331,7 +338,7 @@
     <div class="stats">
       <div class="stat"><b id="s-total">23</b><span>Mapped</span></div>
       <div class="stat hl"><b id="s-luci">12</b><span>Luci bag</span></div>
-      <div class="stat"><b>4</b><span>Off-map</span></div>
+      <div class="stat"><b id="s-off">4</b><span>Off-map</span></div>
     </div>
   </header>
 
@@ -381,7 +388,7 @@
 
   <footer>
     <span>Full Arsenal · PWBA 2026 · Diandra Asbaty</span>
-    <span class="mono">23 mapped · 0 pending · 4 off-map</span>
+    <span class="mono" id="footStats">23 mapped · 0 pending · 4 off-map</span>
   </footer>
 </div>
 
@@ -519,22 +526,32 @@
   const timeWord  = x => x < 38 ? "reads early" : x < 66 ? "mid-lane read" : "gets down the lane / late";
   const readLine  = b => `${hookWord(b.y)} · ${timeWord(b.x)}`;
 
+  // Hover is mouse-only. On a phone the details sheet slides up under your finger,
+  // so an emulated hover would open it and immediately "leave" and close it again.
+  // Taps go through click instead.
+  function bindTip(el, b){
+    const show = (ev) => showTip(ev, b);
+    const mouse = (fn) => (ev) => { if (ev.pointerType === "mouse") fn(ev); };
+    el.addEventListener("click", show);
+    el.addEventListener("pointerenter", mouse(show));
+    el.addEventListener("pointermove", mouse(show));
+    el.addEventListener("pointerleave", mouse(hideTip));
+    el.addEventListener("focus", show);
+    el.addEventListener("blur", hideTip);
+  }
+
   // ---- Plot dots ----
   const ballEls = BALLS.map(b => {
-    const el = document.createElement(b.new || false ? "button" : "div");
-    el.className = "ball" + (b.new ? " is-new" : "") + (b.bag ? " is-bag" : "") + (b.estPos ? " is-est" : "");
+    const el = document.createElement("button");
+    el.type = "button";
+    el.setAttribute("aria-label", `${b.n} — ${TYPES[b.t].label}`);
+    el.className = "ball" + (b.bag ? " is-bag" : "") + (b.estPos ? " is-est" : "");
     el.style.setProperty("--k", TYPES[b.t].color);
     el.style.left = b.x + "%";
     el.style.top  = b.y + "%";
     if (b.x > 74) el.classList.add("flip");   // keep right-edge labels inside
     el.innerHTML = `<span class="pt"></span><span class="lbl">${b.n}</span>`;
-    el.tabIndex = 0;
-    const show = (ev) => showTip(ev, b);
-    el.addEventListener("mouseenter", show);
-    el.addEventListener("mousemove", show);
-    el.addEventListener("mouseleave", hideTip);
-    el.addEventListener("focus", show);
-    el.addEventListener("blur", hideTip);
+    bindTip(el, b);
     plot.appendChild(el);
     return { el, b };
   });
@@ -549,7 +566,7 @@
     if (b.spec){
       const s = b.spec;
       html += `<div class="t-spec">` +
-        `<div class="t-brand">${s.brand}${s.full && s.full!==b.n ? " · "+s.full : ""} <span>· ${s.line}</span></div>` +
+        `<div class="t-brand">${s.brand}${s.full && s.full!==b.n ? " · "+s.full : ""} ${s.line ? `<span>· ${s.line}</span>` : ""}</div>` +
         `<div class="t-grid">` +
           `<span>Cover</span><b>${s.cover}</b>` +
           `<span>Core</span><b>${s.core}</b>` +
@@ -589,17 +606,12 @@
     .sort((a,b) => a.n.localeCompare(b.n))
     .map(b => {
       const c = document.createElement("div");
-      c.className = "card" + (b.new ? " is-new" : "");
+      c.className = "card";
       c.style.setProperty("--k", TYPES[b.t].color);
       const sub = b.spec ? `${b.spec.brand}${b.spec.full && b.spec.full!==b.n ? " " + b.spec.full : ""}` : TYPES[b.t].label;
       c.innerHTML = `<span class="pt"></span><div class="info"><div class="nm">${b.n}</div><div class="ty">${sub}</div></div>`;
       c.tabIndex = 0;
-      const show = (ev) => showTip(ev, b);
-      c.addEventListener("mouseenter", show);
-      c.addEventListener("mousemove", show);
-      c.addEventListener("mouseleave", hideTip);
-      c.addEventListener("focus", show);
-      c.addEventListener("blur", hideTip);
+      bindTip(c, b);
       roster.appendChild(c);
       return { c, b };
     });
@@ -619,17 +631,20 @@
     item.innerHTML = `<span class="pt${t ? "" : " empty"}"></span>` +
       `<div class="li-info"><div class="li-nm">${name}</div><div class="li-ty">${sub}</div></div>`;
     if (b){
-      item.tabIndex = 0;
-      const show = (ev) => showTip(ev, b);
-      item.addEventListener("mouseenter", show);
-      item.addEventListener("mousemove", show);
-      item.addEventListener("mouseleave", hideTip);
-      item.addEventListener("focus", show);
-      item.addEventListener("blur", hideTip);
+      item.type = "button";
+      bindTip(item, b);
     }
     luci.appendChild(item);
   });
   document.getElementById("luciCount").textContent = LUCI.length + " balls";
+
+  // ---- Header / footer counts, derived so they can't drift from the data ----
+  const OFF_MAP = 4; // balls you own that aren't plotted (plastic etc.) — update by hand
+  document.getElementById("s-total").textContent = BALLS.length;
+  document.getElementById("s-luci").textContent = LUCI.length;
+  document.getElementById("s-off").textContent = OFF_MAP;
+  document.getElementById("footStats").textContent =
+    `${BALLS.length} mapped · ${BALLS.filter(b => b.estPos).length} estimated · ${OFF_MAP} off-map`;
 
   // ---- New for 2026 detail cards ----
   const newballs = document.getElementById("newballs");
@@ -643,7 +658,7 @@
          <span class="nb-pt"></span>
          <div>
            <div class="nb-name">${b.n}</div>
-           <div class="nb-sub">${s.brand}${s.full && s.full!==b.n ? " " + s.full : ""} · ${s.line} · ${TYPES[b.t].label}</div>
+           <div class="nb-sub">${s.brand}${s.full && s.full!==b.n ? " " + s.full : ""}${s.line ? " · " + s.line : ""} · ${TYPES[b.t].label}</div>
          </div>
        </div>
        <p class="nb-shape">${s.shape}</p>
@@ -706,3 +721,5 @@
   // On small screens the plot is dense — start with labels off (tap a dot for details).
   if (window.matchMedia("(max-width: 600px)").matches) setLabels(false);
 </script>
+</body>
+</html>
